@@ -408,9 +408,9 @@ class Git
      * @param $branch (string) The branch to look up, defaulting to @em master.
      * @returns (string) The tip of the branch (binary sha1).
      */
-    public function getTip($branch='master')
+    public function getTip($tip='master', $is_tag=false)
     {
-	$subpath = sprintf('refs/heads/%s', $branch);
+	$subpath = sprintf('refs/%s/%s', $is_tag?"tags":"heads", $tip);
 	$path = sprintf('%s/%s', $this->dir, $subpath);
 	if (file_exists($path))
 	    return sha1_bin(file_get_contents($path));
@@ -432,7 +432,7 @@ class Git
 	    if ($head !== NULL)
 		return $head;
 	}
-	throw new Exception(sprintf('no such branch: %s', $branch));
+	throw new Exception(sprintf('no such %s: %s', $is_tag?"tag":"branch", $tip));
     }
 }
 
