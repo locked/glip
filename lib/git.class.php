@@ -403,6 +403,28 @@ class Git
     }
 
     /**
+     * @brief Look up a tag.
+     *
+     * @param $commit_obj (GitObject) The commit to look up.
+     * @returns (string) The commit of the tag.
+     */
+    public function getTag($commit_obj)
+    {
+        $commit = sha1_hex($commit_obj->getName());
+        $dir = $this->dir.'/refs/tags';
+        $d = opendir($dir);
+        while( ($file = readdir($d))!==false ) {
+            $fn = $dir."/".$file;
+            if( is_file($fn) ) {
+                if( $commit==trim(file_get_contents($fn)) ) {
+                    return $file;
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
      * @brief Look up a branch.
      *
      * @param $branch (string) The branch to look up, defaulting to @em master.
